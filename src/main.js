@@ -51,8 +51,6 @@ form.addEventListener('submit', event => {
             position: 'topRight',
             timeout: 2000,
             backgroundColor: 'tomato',
-            image: '/public/what.webp', 
-            imageWidth: 60, 
             titleColor: '#fff',
             messageColor: '#fff',
             icon: 'icon-warning',
