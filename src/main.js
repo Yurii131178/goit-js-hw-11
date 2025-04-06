@@ -23,8 +23,7 @@ form.addEventListener('submit', event => {
   event.preventDefault();
 
   const searchQuery = form.elements['text'].value.trim();
-
-  // Якщо інпут порожній
+  
   if (!searchQuery) {
     iziToast.warning({
         message: 'Sorry, there are no images matching your search query. Please try again!',
@@ -36,12 +35,11 @@ form.addEventListener('submit', event => {
         titleColor: '#fff',
         messageColor: '#fff',
         icon: 'icon-warning',
-      
     });
     form.reset();
     return;
   }
-
+  
   clearGallery();
   showLoader();
 
