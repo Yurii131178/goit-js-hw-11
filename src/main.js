@@ -1,61 +1,77 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
-import getImagesByQuery from './js/pixabay-api';
+import { getImagesByQuery } from './js/pixabay-api.js';
 import {
   createGallery,
   clearGallery,
   showLoader,
   hideLoader,
-} from './js/render-functions';
+} from './js/render-functions.js';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('.form');
-const input = document.querySelector('.form-input');
-const imagesList = document.querySelector('#images-list');
-const btn = document.querySelector('.btn-submit');
+const galleryContainer = document.querySelector('.gallery');
+const loader = document.querySelector('.loader');
 
-let array;
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
-form.addEventListener('submit', handleSubmit);
-
-function handleSubmit(event) {
+form.addEventListener('submit', event => {
   event.preventDefault();
-  const usersRequest = event.target.elements.text.value.trim();
-  
 
-  if (!usersRequest) {
-    iziToast.error({
-      icon: 'null',
-      messageSize: 20,
-      message: 'Please enter your query!',
-      messageColor: 'red',
-      position: 'topRight'
+  const searchQuery = form.elements['text'].value.trim();
+
+  // Якщо інпут порожній
+  if (!searchQuery) {
+    iziToast.warning({
+        message: 'Sorry, there are no images matching your search query. Please try again!',
+        position: 'topRight',
+        timeout: 2000,
+        backgroundColor: 'tomato',
+        image: './public/what.webp', 
+        imageWidth: 60, 
+        titleColor: '#fff',
+        messageColor: '#fff',
+        icon: 'icon-warning',
+      
     });
-    clearGallery();
+    form.reset();
     return;
   }
 
-  getImagesByQuery(usersRequest)
-    .then(response => {
-      array = response.data.hits;
-      if (!array.length) {
+  clearGallery();
+  showLoader();
+
+  getImagesByQuery(searchQuery)
+    .then(data => {
+      hideLoader();
+
+      if (data.hits.length === 0) {
         iziToast.error({
-          icon: 'null',
-          messageSize: 20,
-          message: 'Sorry, there are no images matching your search query. Please try again!',
-          messageColor: 'red',
-          position: 'topRight'
+            message: 'Sorry, there are no images matching your search query. Please try again!',
+            position: 'topRight',
+            timeout: 3000,
+            backgroundColor: 'tomato',
+            image: './public/what.webp', 
+            imageWidth: 60, 
+            titleColor: '#fff',
+            messageColor: '#fff',
+            icon: 'icon-warning',
         });
-        clearGallery();
+
+        form.reset();
         return;
       }
 
-      createGallery(array);
+      createGallery(data.hits);
+      form.reset();
     })
-    .catch(error => console.log(error.message));
-
-  form.reset();
-}
+    .catch(error => {
+      hideLoader();
+      console.error(error);
+      form.reset();
+    });
+});
