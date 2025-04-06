@@ -27,10 +27,12 @@ form.addEventListener('submit', event => {
   if (!searchQuery) {
     iziToast.warning({
         message: 'Sorry, there are no images matching your search query. Please try again!',
+        messageSize: 18,
         position: 'topRight',
         timeout: 2000,
         backgroundColor: 'tomato',
-        messageSize: 20,
+        image: '/public/what.webp', 
+        imageWidth: 60, 
         titleColor: '#fff',
         messageColor: '#fff',
         icon: 'icon-warning',
@@ -49,10 +51,12 @@ form.addEventListener('submit', event => {
       if (data.hits.length === 0) {
         iziToast.error({
             message: 'Sorry, there are no images matching your search query. Please try again!',
+            messageSize: 18,
             position: 'topRight',
-            timeout: 3000,
+            timeout: 2000,
             backgroundColor: 'tomato',
-            messageSize: 20,
+            image: '/public/what.webp', 
+            imageWidth: 60, 
             titleColor: '#fff',
             messageColor: '#fff',
             icon: 'icon-warning',
